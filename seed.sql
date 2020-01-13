@@ -5,7 +5,7 @@ insert into owners
         ('david', '4134564235');
 
 insert into pets
-        (name, species, birthdate)
+        (name, species, birthdate, owner_id)
     values
         ('oakley', 'cat', '2010-05-30', 1),
         ('milla', 'tortoise', '2005-01-01', 1),

@@ -4,9 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "db:delete": "dropdb fullstack-pets",
+    "db:create": "createdb fullstack-pets",
+    "db:schema": "psql -f schema.sql fullstack-pets",
+    "db:seed": "psql -f seed.sql fullstack-pets",
+    "db:reset": "npm run db:delete && npm run db:create && npm run db:schema && npm run db:seed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "pg-promise": "^10.3.5"
+  }
 }
