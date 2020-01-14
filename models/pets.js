@@ -1,8 +1,21 @@
 const db = require('./connection');
 
 // Create
-function create() {
+async function create(name, species, birthdate, owner_id) {
+    try {
+        const result = await db.one(`
+        insert into pets
+            (name, species, birthdate, owner_id)
+        values
+            ($1, $2, $3, $4)
+        returning id
+        `, [name, species, birthdate, owner_id]);
+        // return result.rows[0].id;
+        return result.id;
+    } catch (err) {
+        console.log(err);
 
+    }
 }
 
 // Retrieve
@@ -39,19 +52,58 @@ async function all() {
 }
 
 // Update
-function update() {
+async function updateName(id, name) {
+    const result = await db.result(`
+        update pets set
+            name=$1
+        where id=$2;      
+    `, [name, id]);
+    if (result.rowCount === 1) {
+        return id;
+    } else {
+        return null;
+    }
+}
 
+async function updateBirthdate(id, dateObject) {
+    // '2020-01-12'
+    const year = dateObject.getFullYear(); // YYYY
+
+    let month = dateObject.getMonth() + 1; // MM
+    if (month < 10) {
+        month = `0${month}`;
+    }
+
+    let day = dateObject.getDate(); // DD
+    if (day < 10) {
+        day = `0${day}`;
+    }
+
+    const dateString = `${year}-${month}-${day}`;
+    const result = await db.result(`
+        update pets set
+            birthdate=$1
+        where id=$2
+    `, [dateString, id]);
+    return result;
 }
 
 // Delete
-function del() {
-
+async function del(id) {
+    const result = await db.result(`delete from pets where id=$1`, [id]);
+    console.log(result);
+    if (result.rowCount === 1) {
+        return id;
+    } else {
+        return null;
+    }
 }
 
 module.exports = {
     create,
     one,
     all, 
-    update,
+    updateName,
+    updateBirthdate,
     del
 }
